@@ -38,10 +38,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createTicket = void 0;
 var discord_js_1 = require("discord.js");
+var ticketPanel_1 = require("../models/ticketPanel");
 function createTicket(message) {
     var _a, _b, _c, _d, _e, _f;
     return __awaiter(this, void 0, void 0, function () {
         var filter, collectedData, collectedTitle, collectedDescription, collectedChannelID, channel, collectedCategoryID, category, panelMessage;
+        var _this = this;
         return __generator(this, function (_g) {
             switch (_g.label) {
                 case 0:
@@ -117,6 +119,23 @@ function createTicket(message) {
                                     ],
                                 }],
                         })
+                            .then(function (msg) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, ticketPanel_1.default.create({
+                                            messageId: msg.id,
+                                            categoryId: category.id,
+                                        })
+                                            .then(function (record) {
+                                            console.log("Data inserted to mongoDB");
+                                        })
+                                            .catch(function (e) { return console.log(e); })];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })
                             .catch(function (error) {
                             console.error('Error creating ticket panel:', error);
                         })];

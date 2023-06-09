@@ -1,4 +1,5 @@
 import { Message, TextChannel, CollectorFilter, ChannelType, ButtonBuilder, ButtonStyle, Colors } from 'discord.js';
+import ticketPanel from "../models/ticketPanel";
 
 export async function createTicket(message: Message): Promise<void> {
     const filter: CollectorFilter<any> = (m) => m.author.id === message.author.id;
@@ -33,7 +34,7 @@ export async function createTicket(message: Message): Promise<void> {
     // Prompt the user for the channel ID
     message.channel.send('Please enter the channel ID where the ticket should be created:');
     const collectedChannelID = await message.channel.awaitMessages({
-        filter:filter,
+        filter: filter,
         max: 1,
         time: 60000,
         errors: ['time'],
@@ -64,11 +65,13 @@ export async function createTicket(message: Message): Promise<void> {
         return;
     }
 
+    // console.log(channel.id, category.id);
+
     const panelMessage = await channel.send({
         embeds: [{
             title: 'Ticket Panel',
             description: `**${collectedData.title}**\n${collectedData.description}`,
-            color: Colors.Blurple, 
+            color: Colors.Blurple,
         }],
         components: [{
             type: 1,
@@ -80,9 +83,19 @@ export async function createTicket(message: Message): Promise<void> {
             ],
         }],
     })
-    .catch((error) => {
-        console.error('Error creating ticket panel:', error);
-    });
+        .then(async (msg) => {
+            await ticketPanel.create({
+                messageId: msg.id,
+                categoryId: category.id,
+            })
+                .then((record) => {
+                    console.log(`Data inserted to mongoDB`)
+                })
+                .catch((e) => console.log(e));
+        })
+        .catch((error) => {
+            console.error('Error creating ticket panel:', error);
+        });
     // Send a confirmation message
     message.channel.send('Ticket Panel created!');
 }
