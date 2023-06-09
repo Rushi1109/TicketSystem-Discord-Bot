@@ -1,10 +1,10 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, Client, Colors, EmbedBuilder, Interaction, PermissionFlagsBits } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, Client, Colors, EmbedBuilder, Interaction, PermissionFlagsBits, TextChannel } from "discord.js";
 import ticketPanel from "../models/ticketPanel";
 
 export async function handleButton(interaction: Interaction, client: Client) {
     if (interaction.isButton()) {
         if (interaction.customId == 'ticketOpen') {
-            const messageId = interaction.message?.id;
+            const messageId:String = interaction.message?.id;
             // console.log(channelId);
             const data = await ticketPanel.findOne({ messageId: String(messageId) });
             // console.log(data);
@@ -42,8 +42,8 @@ export async function handleButton(interaction: Interaction, client: Client) {
                     }
                 ]
             })
-                .then(async (ch) => {
-                    const embed = new EmbedBuilder()
+                .then(async (ch: TextChannel) => {
+                    const embed:EmbedBuilder = new EmbedBuilder()
                         .setTitle(`Ticket of ${interaction.user.username}`)
                         .setDescription(`Kindly wait for any admin to reply\nPlease do not spam or you'll get timed out.`)
                         .setColor(Colors.Blurple);
@@ -63,7 +63,7 @@ export async function handleButton(interaction: Interaction, client: Client) {
                     await ch.send({ embeds: [embed], components: [row] })
                         .catch((e) => console.log(e));
 
-                    interaction.reply({
+                    return interaction.reply({
                         content: `Your ticket is created <#${ch.id}>`,
                         ephemeral: true,
                     })

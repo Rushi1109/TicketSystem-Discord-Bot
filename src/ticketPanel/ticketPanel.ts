@@ -2,7 +2,7 @@ import { Message, TextChannel, CollectorFilter, ChannelType, ButtonBuilder, Butt
 import ticketPanel from "../models/ticketPanel";
 
 export async function createTicket(message: Message): Promise<void> {
-    const filter: CollectorFilter<any> = (m) => m.author.id === message.author.id;
+    const filter: CollectorFilter<any> = (m:Message) => m.author.id === message.author.id;
 
     const collectedData: {
         title?: string;

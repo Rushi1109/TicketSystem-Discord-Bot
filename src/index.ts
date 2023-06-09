@@ -7,7 +7,7 @@ import { connectDB } from "./config/db";
 dotenv.config({path: '../config.env'});
 
 // Created a discord client
-const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages]});
+const client:Client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages]});
 connectDB();
 
 client.on('ready', () => {
